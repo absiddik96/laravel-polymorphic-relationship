@@ -27,4 +27,28 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * Get the user's image.
+     */
+    public function image()
+    {
+        return $this->morphOne(Image::class,'imageable');
+    }
+
+    /**
+     * Get the posts for the model.
+     */
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    /**
+     * Get the video for the model.
+     */
+    public function video()
+    {
+        return $this->hasMany(Video::class);
+    }
 }
