@@ -15,4 +15,12 @@ class Post extends Model
     {
         return $this->morphMany(Image::class, 'imageable');
     }
+
+    /**
+     * Get all of the tags for the model.
+     */
+    public function tags()
+    {
+        return $this->morphToMany(Tags::class, 'taggable');
+    }
 }
