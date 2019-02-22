@@ -21,13 +21,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 | One To One Polymorphic relationship
 |--------------------------------------------------------------------------
 */
-
-// Add user image
-Route::get('user/{id}/image/add', function($id) {
-    $user = User::findOrFail($id);
-    return $user->image()->create(['url'=>str_slug($user->name.' '.time().'.jpg')]);
-});
-
 // All user images
 Route::get('all-user-images', function() {
     return $users = User::with('image')->get();
@@ -50,13 +43,6 @@ Route::get('user/{id}/image', function($id) {
 // All user post
 Route::get('all-user-posts', function() {
     return User::with('posts')->get();
-});
-
-// Post image add
-Route::get('post/{id}/image/add', function($id) {
-    return Post::findOrFail($id)->images()->create([
-        'url' => str_slug('post '.time().'.jpg'),
-    ]);
 });
 
 // all post images

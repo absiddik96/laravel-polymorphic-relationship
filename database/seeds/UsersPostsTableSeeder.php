@@ -1,9 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\User;
 
-class PostsTableSeeder extends Seeder
+class UsersPostsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,12 +12,14 @@ class PostsTableSeeder extends Seeder
     public function run()
     {
         \DB::table('posts')->delete();
-        $users = User::all();
-        foreach ($users as $u) {
+        \DB::table('users')->delete();
+
+        factory(App\User::class, 5)->create()->each(function ($u){
             $u->posts()
                 ->saveMany(
                     factory(App\Post::class, rand(1, 5))->make()
                 );
-        }
+        });
+
     }
 }
