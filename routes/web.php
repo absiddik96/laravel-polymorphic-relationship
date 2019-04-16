@@ -1,10 +1,14 @@
 <?php
 
 use App\Tag;
-use App\User;
 use App\Post;
+use App\User;
 use App\Image;
 use App\Video;
+use App\Dealer;
+use App\Supplier;
+use App\Transaction;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -113,4 +117,97 @@ Route::get('video/{id}/tags', function($id) {
 // All tags owner
 Route::get('tags/owner', function() {
     return Tag::with(['posts','videos'])->get();
+});
+
+/*
+|--------------------------------------------------------------------------
+| Transaction Polymorphic relationship [ One to Many]
+|--------------------------------------------------------------------------
+*/
+// Transaction create
+Route::get('/transactions/create', function () {
+
+    return User::findOrfail(1)->transactions()->create([
+        'ac_no' => time(),
+        'transaction_type' => 1,
+        'amount' => rand(100,900),
+    ]);
+});
+
+// Supplier create
+Route::get('/suppliers/create', function () {
+    return Supplier::insert([
+        ['name' => "ab siddik"],
+        ['name' => "Arif"],
+    ])?'done':'failed';
+});
+
+// Dealer create
+Route::get('/dealers/create', function () {
+    return Dealer::insert([
+        ['name' => "Kawsar"],
+        ['name' => "Mir"],
+    ])?'done':'failed';
+});
+
+// TRANSACTIONS
+
+// Supplier Transaction create
+Route::get('/supplier/{id}/transactions/create', function ($id) {
+    return Supplier::findOrfail($id)->transactions()->create([
+        'ac_no' => time(),
+        'transaction_type' => 0,
+        'amount' => rand(100,900),
+    ]);
+});
+
+// Dealer Transaction create
+Route::get('/dealer/{id}/transactions/create', function ($id) {
+    return Dealer::findOrfail($id)->transactions()->create([
+        'ac_no' => time(),
+        'transaction_type' => 1,
+        'amount' => rand(100,900),
+    ]);
+});
+
+// Supplier Transaction History
+Route::get('/supplier/{id}/transactions', function ($id) {
+
+    return Supplier::findOrfail($id)->transactions;
+    
+});
+
+// Dealer Transaction History
+Route::get('/dealer/{id}/transactions', function ($id) {
+
+    return Dealer::findOrfail($id)->transactions;
+
+});
+
+// Transaction By
+Route::get('/transaction/{id}', function ($id) {
+
+    return Transaction::findOrfail($id)->transactionable;
+
+});
+
+// Transaction By Supplier
+Route::get('/transaction-supplier', function () {
+
+    return Supplier::with('transactions')->get()->pluck('transactions')->unique()->values()->collapse();
+
+});
+
+// Transaction By Dealer
+Route::get('/transaction-dealer', function () {
+
+    return Dealer::with('transactions')->get()->pluck('transactions')->unique()->values()->collapse();
+
+});
+
+// Transaction By User
+Route::get('/transaction-user', function () {
+
+    return User::with('transactions')->get()->pluck('transactions')->unique()->values()->collapse();
+
 });

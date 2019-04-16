@@ -51,4 +51,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Video::class);
     }
+
+    public function transactions()
+    {
+        return $this->morphMany(Transaction::class, 'transactionable');
+    }
 }
